@@ -1,0 +1,7 @@
+{
+  "name": "installed-apps",
+  "version": "1.0.0",
+  "description": "Lists installed applications on Android",
+  "main": "index.js",
+  "types": "index.d.ts"
+}

@@ -1,0 +1,49 @@
+{
+  "expo": {
+    "name": "RedEye",
+    "slug": "redeye-agent",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "icon": "./assets/icon.png",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.redeye.agent",
+      "permissions": [
+        "QUERY_ALL_PACKAGES"
+      ],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#09090b"
+      }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ],
+      "expo-background-task"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "d141cf74-d3f3-4dc7-a790-94d8c1a92c87"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/d141cf74-d3f3-4dc7-a790-94d8c1a92c87",
+      "enabled": true
+    }
+  }
+}

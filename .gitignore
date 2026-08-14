@@ -1,0 +1,105 @@
+# Environment & secrets
+.env
+.env.local
+.env.*.local
+*.jwt_secret
+offline_telemetry.json
+
+# Python cache & build
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Virtual environments & IDE
+.venv/
+venv/
+venv_win/
+.vscode/
+.idea/
+
+# Database & logs & data
+database/pg_data/
+*.db
+*.sqlite3
+*.log
+test_results.txt
+nohup.out
+
+# Build outputs & compiled binaries
+agents/windows/Red-Eye.exe
+agents/windows/Red-Eye
+agents/linux/redeye-agent
+.expo/
+.gradle/
+**/build/
+**/dist/
+
+# Node & dependencies
+node_modules/
+frontend/dist/
+frontend/node_modules/
+agents/android/node_modules/
+
+# Temp Windows folders
+C:\ProgramData/
+C:\ProgramData
+C:*
+C_/
+C_
+
+# Local documentation & working notes (kept locally, excluded from repo)
+work.md
+issue.md
+PROJECT_CONTEXT.md
+all-things.md
+DESIGN.md
+ui.md
+DOCUMENTATION.md
+frontend/inspire.md
+agents/windows/Issues.md
+
+# Local JSON caches and threat intel scanning results
+vt_results.json
+malware_free.json
+detected.json
+suspicious.json
+malware.json
+*.json.bak
+*.json.tmp
+
+# macOS & local system files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Backend JWT secrets
+.jwt_secret
+**/.jwt_secret
+
+# Local scripts & backup files
+scratch/
+scratch_test.py
+*backup.py
+*-backup.py
+*_backup.py
+*.bak
+*.tmp
+*.temp
+
+# Android local configs & Keystores (sensitive credentials)
+local.properties
+*.keystore
+*.jks
+*.pepk
+
+# Binaries & packages
+*.apk
+*.aab
+*.exe
