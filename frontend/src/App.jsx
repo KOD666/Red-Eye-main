@@ -132,7 +132,28 @@ export default function App() {
 
   // Dynamic C2 Gateway IP Configuration State
   const [c2GatewayIp, setC2GatewayIp] = useState(localStorage.getItem('redeye_c2_ip') || 'api.desaivraj.site');
-  const c2BaseUrl = `http://${c2GatewayIp}:8000`;
+
+  // Robust base URL builder that supports:
+  // 1. Full URLs: "https://my-app.onrender.com"
+  // 2. Simple IPs/hostnames: "192.168.1.50" or "localhost" -> http://192.168.1.50:8000
+  // 3. Domains with SSL: "api.desaivraj.site" -> https://api.desaivraj.site
+  const getC2BaseUrl = (ipOrUrl) => {
+    if (!ipOrUrl) return 'http://localhost:8000';
+    if (ipOrUrl.includes('://')) return ipOrUrl; // Already a full URL
+    
+    // Check if it's a domain or an IP
+    const hasPort = ipOrUrl.includes(':');
+    const isIp = /^[0-9.]+$/.test(ipOrUrl.replace(/:[0-9]+$/, '')) || ipOrUrl.includes('localhost');
+    
+    if (isIp) {
+      return hasPort ? `http://${ipOrUrl}` : `http://${ipOrUrl}:8000`;
+    } else {
+      // It's a hostname like api.desaivraj.site or my-app.onrender.com
+      return hasPort ? `https://${ipOrUrl}` : `https://${ipOrUrl}`;
+    }
+  };
+
+  const c2BaseUrl = getC2BaseUrl(c2GatewayIp);
 
   const handleUpdateC2Ip = (newIp) => {
     setC2GatewayIp(newIp);
@@ -235,7 +256,7 @@ export default function App() {
   useEffect(() => {
     const fetchSilentToken = async () => {
       try {
-        const res = await fetch(`http://${c2GatewayIp}:8000/api/v1/operator/login`, {
+        const res = await fetch(`${c2BaseUrl}/api/v1/operator/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username: 'admin', password: 'redeye-secret' })
@@ -261,7 +282,7 @@ export default function App() {
     const fetchGlobalData = async () => {
       try {
         // Fetch global agent list
-        const urlAgents = `http://${c2GatewayIp}:8000/api/v1/operator/agents`;
+        const urlAgents = `${c2BaseUrl}/api/v1/operator/agents`;
         try {
           const resAgents = await fetch(urlAgents, {
             headers: { 'Authorization': `Bearer ${operatorToken}` }
@@ -289,7 +310,7 @@ export default function App() {
         }
 
         // Fetch global logs
-        const urlLogs = `http://${c2GatewayIp}:8000/api/v1/operator/logs`;
+        const urlLogs = `${c2BaseUrl}/api/v1/operator/logs`;
         try {
           const resLogs = await fetch(urlLogs, {
             headers: { 'Authorization': `Bearer ${operatorToken}` }
@@ -308,7 +329,7 @@ export default function App() {
         }
 
         // Fetch global alerts
-        const urlAlerts = `http://${c2GatewayIp}:8000/api/v1/operator/alerts`;
+        const urlAlerts = `${c2BaseUrl}/api/v1/operator/alerts`;
         try {
           const resAlerts = await fetch(urlAlerts, {
             headers: { 'Authorization': `Bearer ${operatorToken}` }
@@ -327,7 +348,7 @@ export default function App() {
         }
 
         // Fetch recent events
-        const urlEvents = `http://${c2GatewayIp}:8000/api/v1/operator/events`;
+        const urlEvents = `${c2BaseUrl}/api/v1/operator/events`;
         try {
           const resEvents = await fetch(urlEvents, {
             headers: { 'Authorization': `Bearer ${operatorToken}` }
@@ -550,7 +571,7 @@ export default function App() {
 
     const fetchAgentDetails = async () => {
       try {
-        const res = await fetch(`https://api.desaivraj.site/api/v1/operator/agents/${selectedAgentId}`, {
+        const res = await fetch(`${c2BaseUrl}/api/v1/operator/agents/${selectedAgentId}`, {
           headers: { 'Authorization': `Bearer ${operatorToken}` }
         });
         if (res.ok && active) {
@@ -697,7 +718,7 @@ export default function App() {
 
     const fetchDetailAgentStats = async () => {
       try {
-        const res = await fetch(`https://api.desaivraj.site/api/v1/operator/agents/${detailAgentId}`, {
+        const res = await fetch(`${c2BaseUrl}/api/v1/operator/agents/${detailAgentId}`, {
           headers: { 'Authorization': `Bearer ${operatorToken}` }
         });
         if (res.ok && active) {
@@ -906,27 +927,27 @@ export default function App() {
 
           if (formOS === 'Windows') {
             filename = 'Red-Eye-new.exe';
-            downloadUrl = `https://api.desaivraj.site/api/v1/operator/agent/download?format=exe&platform_type=Windows&name=${encodeURIComponent(formAgentName)}&interval=${encodeURIComponent(formHeartbeat)}${operatorToken ? `&token=${encodeURIComponent(operatorToken)}` : ''}`;
+            downloadUrl = `${c2BaseUrl}/api/v1/operator/agent/download?format=exe&platform_type=Windows&name=${encodeURIComponent(formAgentName)}&interval=${encodeURIComponent(formHeartbeat)}${operatorToken ? `&token=${encodeURIComponent(operatorToken)}` : ''}`;
             commands = [
               'Red-Eye-new.exe --install',
               'Red-Eye-new.exe --start'
             ];
           } else if (formOS === 'Linux') {
             filename = 'redeye-agent';
-            downloadUrl = 'https://api.desaivraj.site/agents/linux/redeye-agent';
+            downloadUrl = `${c2BaseUrl}/agents/linux/redeye-agent`;
             commands = [
               'chmod +x redeye-agent',
               './redeye-agent'
             ];
           } else if (formOS === 'Android') {
             filename = 'RedEye.apk';
-            downloadUrl = `https://api.desaivraj.site/agents/android/RedEye.apk`;
+            downloadUrl = `${c2BaseUrl}/agents/android/RedEye.apk`;
             commands = [
               'Transfer RedEye.apk to target Android device and tap to install'
             ];
           } else if (formOS === 'OTA Update') {
             filename = 'Red-Eye-Update.exe';
-            downloadUrl = `https://api.desaivraj.site/api/v1/agents/download`;
+            downloadUrl = `${c2BaseUrl}/api/v1/agents/download`;
             commands = [
               'OTA Update binary download initiated.',
               'Deploy via RedEye C2 update channel.'
@@ -1041,7 +1062,7 @@ export default function App() {
 
   const handleRestartAgent = async (agent) => {
     try {
-      const res = await fetch(`https://api.desaivraj.site/api/v1/operator/agents/${agent.id}/restart`, {
+      const res = await fetch(`${c2BaseUrl}/api/v1/operator/agents/${agent.id}/restart`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1055,7 +1076,7 @@ export default function App() {
 
         setTimeout(async () => {
           try {
-            const detailsRes = await fetch(`https://api.desaivraj.site/api/v1/operator/agents/${agent.id}`, {
+            const detailsRes = await fetch(`${c2BaseUrl}/api/v1/operator/agents/${agent.id}`, {
               headers: { 'Authorization': `Bearer ${operatorToken}` }
             });
             if (detailsRes.ok) {
@@ -1076,7 +1097,7 @@ export default function App() {
 
   const handleWakeupAgent = async (agent) => {
     try {
-      const res = await fetch(`https://api.desaivraj.site/api/v1/operator/agents/${agent.id}/wakeup`, {
+      const res = await fetch(`${c2BaseUrl}/api/v1/operator/agents/${agent.id}/wakeup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1107,7 +1128,7 @@ export default function App() {
   const handleRemoveAgent = async (agentId, hostname) => {
     if (confirm(`Are you sure you want to permanently deregister Agent ${hostname}?`)) {
       try {
-        const res = await fetch(`https://api.desaivraj.site/api/v1/operator/agents/${agentId}`, {
+        const res = await fetch(`${c2BaseUrl}/api/v1/operator/agents/${agentId}`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${operatorToken}`
@@ -1174,7 +1195,7 @@ export default function App() {
     logSql(`INSERT INTO commands (agent_id, command_text, status) VALUES ('${selectedAgentId}', '${cmd}', 'pending');`);
 
     try {
-      const res = await fetch(`https://api.desaivraj.site/api/v1/operator/agents/${selectedAgentId}/command`, {
+      const res = await fetch(`${c2BaseUrl}/api/v1/operator/agents/${selectedAgentId}/command`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1184,7 +1205,7 @@ export default function App() {
       });
       if (res.ok) {
         // Immediate refresh of console history to show command scheduled
-        const detailsRes = await fetch(`https://api.desaivraj.site/api/v1/operator/agents/${selectedAgentId}`, {
+        const detailsRes = await fetch(`${c2BaseUrl}/api/v1/operator/agents/${selectedAgentId}`, {
           headers: { 'Authorization': `Bearer ${operatorToken}` }
         });
         if (detailsRes.ok) {
@@ -1281,7 +1302,7 @@ export default function App() {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('https://api.desaivraj.site/api/v1/operator/login', {
+      const res = await fetch(`${c2BaseUrl}/api/v1/operator/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: loginUser, password: loginPass })
@@ -1356,7 +1377,7 @@ export default function App() {
     }, 15000);
 
     try {
-      const response = await fetch(`http://${c2GatewayIp}:8000/api/v1/operator/agents/${agent.id}/vt_batch_scan`, {
+      const response = await fetch(`${c2BaseUrl}/api/v1/operator/agents/${agent.id}/vt_batch_scan`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${operatorToken}`,
@@ -1387,7 +1408,7 @@ export default function App() {
     const cmd = agent.platform === 'Windows' ? `taskkill /F /PID ${pid}` : `kill -9 ${pid}`;
     if (!window.confirm(`Are you sure you want to terminate process PID ${pid} on ${agent.hostname} ("${cmd}")?`)) return;
     try {
-      const res = await fetch(`https://api.desaivraj.site/api/v1/operator/agents/${agent.id}/command`, {
+      const res = await fetch(`${c2BaseUrl}/api/v1/operator/agents/${agent.id}/command`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1408,7 +1429,7 @@ export default function App() {
 
   const handleProcessVtScan = async (agent, pid) => {
     try {
-      const response = await fetch(`https://api.desaivraj.site/api/v1/operator/agents/${agent.id}/processes/${pid}/vt_rescan`, {
+      const response = await fetch(`${c2BaseUrl}/api/v1/operator/agents/${agent.id}/processes/${pid}/vt_rescan`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${operatorToken}` }
       });
@@ -1417,7 +1438,7 @@ export default function App() {
         alert(`Scan Complete!\nVT Rate: ${result.vt_rate || 'N/A'}\nFinal Threat Score: ${result.threat_score}\nClassification: ${result.threat_classification}`);
 
         // Immediately fetch fresh stats to refresh UI
-        const res = await fetch(`https://api.desaivraj.site/api/v1/operator/agents/${agent.id}`, {
+        const res = await fetch(`${c2BaseUrl}/api/v1/operator/agents/${agent.id}`, {
           headers: { 'Authorization': `Bearer ${operatorToken}` }
         });
         if (res.ok) {
