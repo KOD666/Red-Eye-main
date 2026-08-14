@@ -59,6 +59,9 @@ ui.md
 DOCUMENTATION.md
 frontend/inspire.md
 agents/windows/Issues.md
+agents.md
+Deploy.md
+host.md
 
 # Local JSON caches and threat intel scanning results
 vt_results.json
