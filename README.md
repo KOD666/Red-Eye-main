@@ -239,7 +239,7 @@ Ensure all services are running properly by checking:
 ## Live App
 
 ### Live Demo
-[Live Demo Link](https://example.com/404-not-yet-deployed)
+[Live Demo Link](https://redeye.desaivraj.site/)
 
 *Note: The real deployment link will be added here once the staging environment is deployed.*
 
