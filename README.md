@@ -57,7 +57,26 @@ RedEye is a centralized Endpoint Detection and Response (EDR) and Command and Co
         └── package.json    # Expo dependencies and scripts
 ```
 
+### Live Demo
+
+##### Live Website (If You Can't Connect To Agents Then Logout and Login Again) 
+[Red-Eye](https://redeye.desaivraj.site/)
+
+##### Complied Applicaion 
+[Download From Here](https://github.com/KOD666/Red-Eye-main/releases/tag/v1.0.0)
+
+##### API DOCS 
+[DOCS](https://github.com/KOD666/Red-Eye-main/blob/main/api_documentation.md)
+
 ## Getting Started
+
+###  If Do not want to run this locally then use this directly it will use our backend 
+
+```bash
+cd frontend-exe/frontend
+npm install
+npm run dev
+```
 
 Follow these steps in order to set up and run the platform on your machine.
 
@@ -236,10 +255,23 @@ Ensure all services are running properly by checking:
   It should return `{"detail":"Not Found"}` (confirming the gateway is active).
 - **Vite Dev Server**: Open `http://localhost:5173` in your browser. Note that a standalone Electron desktop operator GUI window should automatically launch when running `start.py`.
 
-## Live App
 
-### Live Demo
-[Live Demo Red-Eye](https://redeye.desaivraj.site/)
+
+## Images 
+
+<img width="700" height="400" alt="image" src="https://github.com/user-attachments/assets/8a8122e4-43ff-4596-94e7-f38c7fa73ea3" />
+
+---
+
+<img width="700" height="409" alt="image" src="https://github.com/user-attachments/assets/d858aa87-b7d9-4d5d-8a01-a0695566c037" />
+
+---
+
+<img width="700" height="400" alt="image" src="https://github.com/user-attachments/assets/bb139de1-9d11-425c-8b2d-ba9a12b410df" />
+
+---
+
+<img width="700" height="400" alt="image" src="https://github.com/user-attachments/assets/9bf57621-4b8e-4d91-b182-5618ecf37b67" />
 
 
 ## Credits & Contributors
