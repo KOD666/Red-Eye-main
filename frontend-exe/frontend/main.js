@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, dialog } from 'electron';
+import { app, BrowserWindow, ipcMain, dialog, session } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import https from 'https';
@@ -81,7 +81,9 @@ function createWindow() {
   win.setMenuBarVisibility(false);
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+  await session.defaultSession.clearCache();
+
   createWindow();
 
   app.on('activate', () => {
