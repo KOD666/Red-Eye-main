@@ -235,7 +235,7 @@ export default function App() {
   useEffect(() => {
     const fetchSilentToken = async () => {
       try {
-        const res = await fetch(`https://${c2GatewayIp}/api/v1/operator/login`, {
+        const res = await fetch(`https://api.desaivraj.site/api/v1/operator/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username: 'admin', password: 'redeye-secret' })
@@ -261,7 +261,7 @@ export default function App() {
     const fetchGlobalData = async () => {
       try {
         // Fetch global agent list
-        const urlAgents = `https://${c2GatewayIp}/api/v1/operator/agents`;
+        const urlAgents = `https://api.desaivraj.site/api/v1/operator/agents`;
         try {
           const resAgents = await fetch(urlAgents, {
             headers: { 'Authorization': `Bearer ${operatorToken}` }
@@ -289,7 +289,7 @@ export default function App() {
         }
 
         // Fetch global logs
-        const urlLogs = `https://${c2GatewayIp}/api/v1/operator/logs`;
+        const urlLogs = `https://api.desaivraj.site/api/v1/operator/logs`;
         try {
           const resLogs = await fetch(urlLogs, {
             headers: { 'Authorization': `Bearer ${operatorToken}` }
@@ -308,7 +308,7 @@ export default function App() {
         }
 
         // Fetch global alerts
-        const urlAlerts = `https://${c2GatewayIp}/api/v1/operator/alerts`;
+        const urlAlerts = `https://api.desaivraj.site/api/v1/operator/alerts`;
         try {
           const resAlerts = await fetch(urlAlerts, {
             headers: { 'Authorization': `Bearer ${operatorToken}` }
@@ -327,7 +327,7 @@ export default function App() {
         }
 
         // Fetch recent events
-        const urlEvents = `https://${c2GatewayIp}/api/v1/operator/events`;
+        const urlEvents = `https://api.desaivraj.site/api/v1/operator/events`;
         try {
           const resEvents = await fetch(urlEvents, {
             headers: { 'Authorization': `Bearer ${operatorToken}` }
@@ -1332,7 +1332,7 @@ export default function App() {
       }
       hashesToScan = [...new Set(targetApps.map(app => app.apk_sha256).filter(Boolean))];
     } else {
-      const desktopProcs = agentProcesses || [];
+      const desktopProcs = agent.processes || agent.activity?.processes || [];
       const suspiciousProcs = desktopProcs.filter(p => (p.threat_score || 0) >= 30 || (p.threat_reasons && p.threat_reasons.length > 0) || (p.reasons && p.reasons.length > 0));
       hashesToScan = [...new Set(suspiciousProcs.map(p => p.sha256_hash || p.sha256 || p.hash).filter(Boolean))];
     }
@@ -1356,7 +1356,7 @@ export default function App() {
     }, 15000);
 
     try {
-      const response = await fetch(`https://${c2GatewayIp}/api/v1/operator/agents/${agent.id}/vt_batch_scan`, {
+      const response = await fetch(`https://api.desaivraj.site/api/v1/operator/agents/${agent.id}/vt_batch_scan`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${operatorToken}`,
